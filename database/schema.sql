@@ -1,0 +1,16 @@
+companies
+profiles
+products
+materials
+product_materials
+finishes
+hardware
+packaging_materials
+ship_ports
+currencies
+containers
+cost_sheets
+cost_sheet_items
+cost_sheet_hardware
+cost_sheet_packaging
+cost_sheet_releases
