@@ -1,9 +1,23 @@
+import { useEffect } from "react";
+import { supabase } from "./lib/supabase";
+
 function App() {
+  useEffect(() => {
+    async function testConnection() {
+      const { data, error } = await supabase
+        .from("test_connection")
+        .select("*");
+
+      console.log("DATA:", data);
+      console.log("ERROR:", error);
+    }
+
+    testConnection();
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-4xl font-bold">
-        My Costing App
-      </h1>
+    <div>
+      <h1>My Costing App</h1>
     </div>
   );
 }
