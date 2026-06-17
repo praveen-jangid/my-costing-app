@@ -1,74 +1,109 @@
 import {
   LayoutDashboard,
   Package,
-  Hammer,
   Wrench,
   Box,
   Settings,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+
+const menuItems = [
+  {
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    path: "/",
+  },
+  {
+    label: "Products",
+    icon: Package,
+    path: "/products",
+  },
+  {
+    label: "Hardware",
+    icon: Wrench,
+    path: "/hardware",
+  },
+  {
+    label: "Packaging",
+    icon: Box,
+    path: "/packaging",
+  },
+  {
+    label: "Settings",
+    icon: Settings,
+    path: "/settings",
+  },
+];
 
 export default function Sidebar() {
   return (
-    <aside className="w-64 bg-white border-r h-screen">
-      <div className="p-5 border-b">
-        <h1 className="text-xl font-bold">
-          My Costing App
-        </h1>
-        <p className="text-sm text-gray-500">
-          Furniture ERP
-        </p>
+    <aside className="w-72 h-screen bg-slate-900 text-white flex flex-col border-r border-slate-800">
+      {/* Logo */}
+      <div className="h-20 px-6 flex items-center border-b border-slate-800">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight">
+            Costing ERP
+          </h1>
+
+          <p className="text-sm text-slate-400">
+            Furniture Manufacturing
+          </p>
+        </div>
       </div>
 
-      <nav className="p-5 flex flex-col gap-1">
-        <Link
-          to="/"
-          className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100"
-        >
-          <LayoutDashboard size={18} />
-          Dashboard
-        </Link>
+      {/* Navigation */}
+      <nav className="flex-1 p-4">
+        <div className="mb-4">
+          <p className="px-3 mb-2 text-xs uppercase tracking-wider text-slate-500">
+            Main Menu
+          </p>
 
-        <Link
-          to="/products"
-          className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100"
-        >
-          <Package size={18} />
-          Products
-        </Link>
+          <div className="space-y-1">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
 
-        <Link
-          to="/materials"
-          className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100"
-        >
-          <Hammer size={18} />
-          Materials
-        </Link>
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    `
+                    flex items-center gap-3
+                    px-3 py-3
+                    rounded-xl
+                    transition-all
+                    ${
+                      isActive
+                        ? "bg-indigo-600 text-white shadow-lg"
+                        : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                    }
+                  `
+                  }
+                >
+                  <Icon size={18} />
 
-        <Link
-          to="/hardware"
-          className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100"
-        >
-          <Wrench size={18} />
-          Hardware
-        </Link>
-
-        <Link
-          to="/packaging"
-          className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100"
-        >
-          <Box size={18} />
-          Packaging
-        </Link>
-
-        <Link
-          to="/settings"
-          className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100"
-        >
-          <Settings size={18} />
-          Settings
-        </Link>
+                  <span className="font-medium">
+                    {item.label}
+                  </span>
+                </NavLink>
+              );
+            })}
+          </div>
+        </div>
       </nav>
+
+      {/* Footer */}
+      <div className="p-4 border-t border-slate-800">
+        <div className="bg-slate-800 rounded-xl p-3">
+          <p className="text-sm font-medium">
+            My Costing App
+          </p>
+
+          <p className="text-xs text-slate-400 mt-1">
+            Version 1.0
+          </p>
+        </div>
+      </div>
     </aside>
   );
 }

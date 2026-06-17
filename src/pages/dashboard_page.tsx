@@ -1,8 +1,12 @@
+/* eslint-disable react-hooks/immutability */
 import { useEffect, useState } from "react";
+
 import { getProductCount } from "../services/product_service";
+import { getHardwareCount } from "../services/hardware_service";
 
 export default function DashboardPage() {
   const [productCount, setProductCount] = useState(0);
+  const [hardwareCount, setHardwareCount] = useState(0);
 
   useEffect(() => {
     loadDashboard();
@@ -10,8 +14,13 @@ export default function DashboardPage() {
 
   async function loadDashboard() {
     try {
-      const count = await getProductCount();
-      setProductCount(count);
+      const [products, hardware] = await Promise.all([
+        getProductCount(),
+        getHardwareCount(),
+      ]);
+
+      setProductCount(products);
+      setHardwareCount(hardware);
     } catch (error) {
       console.error(error);
     }
@@ -61,7 +70,7 @@ export default function DashboardPage() {
           </p>
 
           <h2 className="text-3xl font-bold">
-            0
+            {hardwareCount}
           </h2>
         </div>
 

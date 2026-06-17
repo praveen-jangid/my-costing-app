@@ -8,7 +8,7 @@ export default function Topbar() {
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-full bg-gray-200" />
+        <div className="w-9 h-9 rounded-full bg-red-500" />
 
         <div>
           <p className="text-sm font-medium">

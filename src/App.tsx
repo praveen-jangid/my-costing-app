@@ -12,7 +12,6 @@ import LoginPage from "./pages/login_page";
 
 import CreateProductPage from "./pages/create_product_page";
 import CostingPage from "./pages/costing_page";
-import MaterialsPage from "./pages/materials_page";
 import HardwarePage from "./pages/hardware_page";
 import PackagingPage from "./pages/packaging_page";
 import SettingsPage from "./pages/settings_page";
@@ -50,12 +49,6 @@ function App() {
           <Route
             path="/costing/:id"
             element={<CostingPage />}
-          />
-
-          {/* Materials */}
-          <Route
-            path="/materials"
-            element={<MaterialsPage />}
           />
 
           {/* Hardware */}

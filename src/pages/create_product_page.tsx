@@ -1,60 +1,94 @@
-import { useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from "react";
+import Select from "react-select";
+
 import { createProduct } from "../services/product_service";
 import { uploadProductImage } from "../services/image_services";
+import { getMaterials } from "../services/material_service";
+import { getFinishes } from "../services/finish_service";
 
 export default function CreateProductPage() {
   const [productCode, setProductCode] = useState("");
   const [productName, setProductName] = useState("");
+
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState("");
-  const [description, setDescription] = useState("");
+
   const [assemblyType, setAssemblyType] = useState("FIXED");
-  const [fobEnabled, setFobEnabled] = useState(false);
 
   const [length, setLength] = useState("");
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
 
   const [unit, setUnit] = useState("INCH");
-  const [finish, setFinish] = useState("");
+
+  const [availableMaterials, setAvailableMaterials] = useState<string[]>([]);
+  const [availableFinishes, setAvailableFinishes] = useState<string[]>([]);
+
+  const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
+  const [selectedFinishes, setSelectedFinishes] = useState<string[]>([]);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const materials = await getMaterials();
+        const finishes = await getFinishes();
+
+        setAvailableMaterials(
+          materials.map((item: any) => item.name)
+        );
+
+        setAvailableFinishes(
+          finishes.map((item: any) => item.name)
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    loadData();
+  }, []);
 
   async function handleSave() {
-    let imageUrl = "";
-
-    if (imageFile) {
-    imageUrl =
-        await uploadProductImage(imageFile);
-    }
     try {
+      let imageUrl = "";
+
+      if (imageFile) {
+        imageUrl = await uploadProductImage(imageFile);
+      }
+
       await createProduct({
         product_code: productCode,
         product_name: productName,
         image_url: imageUrl,
-        description,
-
         assembly_type: assemblyType,
-        fob_enabled: fobEnabled,
-
         length: Number(length) || 0,
         width: Number(width) || 0,
         height: Number(height) || 0,
-
         unit,
-        finish,
       });
+
+      console.log("Materials:", selectedMaterials);
+      console.log("Finishes:", selectedFinishes);
 
       alert("Product saved successfully!");
 
       setProductCode("");
       setProductName("");
-      setDescription("");
+
+      setImageFile(null);
+      setPreviewUrl("");
+
       setAssemblyType("FIXED");
-      setFobEnabled(false);
+
       setLength("");
       setWidth("");
       setHeight("");
+
       setUnit("INCH");
-      setFinish("");
+
+      setSelectedMaterials([]);
+      setSelectedFinishes([]);
     } catch (error) {
       console.error(error);
       alert("Failed to save product");
@@ -62,182 +96,203 @@ export default function CreateProductPage() {
   }
 
   return (
-    <div className="max-w-5xl">
-      <h1 className="text-3xl font-bold mb-6">
+    <div className="max-w-7xl mx-auto p-8">
+      <h1 className="text-3xl font-bold mb-8">
         Create Product
       </h1>
 
-      <div className="bg-white rounded-xl shadow-sm p-6 space-y-6">
+      <div className="space-y-6">
+        {/* Product Info */}
+        <div className="bg-white rounded-2xl border shadow-sm p-6">
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Left */}
+            <div className="space-y-5">
+              <div>
+                <label className="block mb-2 text-sm font-medium">
+                  Product Code
+                </label>
 
-        {/* Basic Info */}
-        <div>
-          <h2 className="text-xl font-semibold mb-4">
-            Basic Information
-          </h2>
+                <input
+                  value={productCode}
+                  onChange={(e) =>
+                    setProductCode(e.target.value)
+                  }
+                  className="w-full border rounded-lg px-4 py-3"
+                />
+              </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <input
-              type="text"
-              placeholder="Product Code"
-              value={productCode}
-              onChange={(e) => setProductCode(e.target.value)}
-              className="border rounded-lg p-3"
-            />
+              <div>
+                <label className="block mb-2 text-sm font-medium">
+                  Product Name
+                </label>
 
-            <input
-              type="text"
-              placeholder="Product Name"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
-              className="border rounded-lg p-3"
-            />
-            <div className="space-y-4">
+                <input
+                  value={productName}
+                  onChange={(e) =>
+                    setProductName(e.target.value)
+                  }
+                  className="w-full border rounded-lg px-4 py-3"
+                />
+              </div>
+            </div>
 
-  <label className="block font-medium">
-    Product Image
-  </label>
+            {/* Right */}
+            <div>
+              <label className="block mb-2 text-sm font-medium">
+                Product Image
+              </label>
 
-  <label
-    htmlFor="product-image"
-    className="
-      flex
-      flex-col
-      items-center
-      justify-center
-      h-64
-      border-2
-      border-dashed
-      rounded-xl
-      cursor-pointer
-      bg-gray-50
-      hover:bg-gray-100
-    "
-  >
+              <label
+                htmlFor="product-image"
+                className="
+                  flex
+                  flex-col
+                  items-center
+                  justify-center
+                  h-64
+                  border-2
+                  border-dashed
+                  rounded-xl
+                  cursor-pointer
+                  bg-gray-50
+                  hover:bg-gray-100
+                "
+              >
+                {previewUrl ? (
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="h-full w-full object-contain rounded-xl"
+                  />
+                ) : (
+                  <>
+                    <div className="text-5xl mb-2">
+                      📷
+                    </div>
 
-    {previewUrl ? (
+                    <p className="font-medium">
+                      Click to Upload
+                    </p>
 
-      <img
-        src={previewUrl}
-        alt="Preview"
-        className="h-full object-contain rounded-xl"
-      />
+                    <p className="text-sm text-gray-500">
+                      JPG, PNG
+                    </p>
+                  </>
+                )}
+              </label>
 
-    ) : (
+              <input
+                id="product-image"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file =
+                    e.target.files?.[0] || null;
 
-      <>
-        <div className="text-5xl mb-2">
-          📷
+                  if (!file) return;
+
+                  setImageFile(file);
+                  setPreviewUrl(
+                    URL.createObjectURL(file)
+                  );
+                }}
+              />
+            </div>
+          </div>
         </div>
 
-        <p className="font-medium">
-          Click to Upload
-        </p>
+        {/* Materials */}
+        <div className="bg-white rounded-2xl border shadow-sm p-6">
+          <label className="block mb-3 text-sm font-medium">
+            Materials
+          </label>
 
-        <p className="text-sm text-gray-500">
-          JPG, PNG up to 2MB
-        </p>
-      </>
-
-    )}
-
-  </label>
-
-  <input
-    id="product-image"
-    type="file"
-    accept="image/*"
-    className="hidden"
-    onChange={(e) => {
-
-      const file =
-        e.target.files?.[0] || null;
-
-      if (!file) return;
-
-      setImageFile(file);
-
-      setPreviewUrl(
-        URL.createObjectURL(file)
-      );
-    }}
-  />
-
-</div>
-          </div>
-
-          <textarea
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="border rounded-lg p-3 w-full mt-4"
-            rows={4}
+          <Select
+            isMulti
+            options={availableMaterials.map((m) => ({
+              value: m,
+              label: m,
+            }))}
+            value={selectedMaterials.map((m) => ({
+              value: m,
+              label: m,
+            }))}
+            onChange={(values) =>
+              setSelectedMaterials(
+                values.map((v) => v.value)
+              )
+            }
           />
         </div>
 
-        {/* Product Config */}
-        <div>
-          <h2 className="text-xl font-semibold mb-4">
-            Product Configuration
-          </h2>
+        {/* Finishes */}
+        <div className="bg-white rounded-2xl border shadow-sm p-6">
+          <label className="block mb-3 text-sm font-medium">
+            Finishes
+          </label>
 
-          <div className="grid grid-cols-2 gap-4">
-            <select
-              value={assemblyType}
-              onChange={(e) => setAssemblyType(e.target.value)}
-              className="border rounded-lg p-3"
-            >
-              <option value="FIXED">Fixed</option>
-              <option value="KD">KD</option>
-            </select>
-
-            <select
-              value={fobEnabled ? "YES" : "NO"}
-              onChange={(e) =>
-                setFobEnabled(e.target.value === "YES")
-              }
-              className="border rounded-lg p-3"
-            >
-              <option value="YES">FOB Enabled</option>
-              <option value="NO">FOB Disabled</option>
-            </select>
-          </div>
+          <Select
+            isMulti
+            options={availableFinishes.map((f) => ({
+              value: f,
+              label: f,
+            }))}
+            value={selectedFinishes.map((f) => ({
+              value: f,
+              label: f,
+            }))}
+            onChange={(values) =>
+              setSelectedFinishes(
+                values.map((v) => v.value)
+              )
+            }
+          />
         </div>
 
         {/* Dimensions */}
-        <div>
-          <h2 className="text-xl font-semibold mb-4">
+        <div className="bg-white rounded-2xl border shadow-sm p-6">
+          <h2 className="text-lg font-semibold mb-4">
             Dimensions
           </h2>
 
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid md:grid-cols-4 gap-4">
             <input
               type="number"
               placeholder="Length"
               value={length}
-              onChange={(e) => setLength(e.target.value)}
-              className="border rounded-lg p-3"
+              onChange={(e) =>
+                setLength(e.target.value)
+              }
+              className="border rounded-lg px-4 py-3"
             />
 
             <input
               type="number"
               placeholder="Width"
               value={width}
-              onChange={(e) => setWidth(e.target.value)}
-              className="border rounded-lg p-3"
+              onChange={(e) =>
+                setWidth(e.target.value)
+              }
+              className="border rounded-lg px-4 py-3"
             />
 
             <input
               type="number"
               placeholder="Height"
               value={height}
-              onChange={(e) => setHeight(e.target.value)}
-              className="border rounded-lg p-3"
+              onChange={(e) =>
+                setHeight(e.target.value)
+              }
+              className="border rounded-lg px-4 py-3"
             />
 
             <select
               value={unit}
-              onChange={(e) => setUnit(e.target.value)}
-              className="border rounded-lg p-3"
+              onChange={(e) =>
+                setUnit(e.target.value)
+              }
+              className="border rounded-lg px-4 py-3"
             >
               <option value="INCH">INCH</option>
               <option value="MM">MM</option>
@@ -246,25 +301,37 @@ export default function CreateProductPage() {
           </div>
         </div>
 
-        {/* Finish */}
-        <div>
-          <h2 className="text-xl font-semibold mb-4">
-            Finish
-          </h2>
+        {/* Assembly */}
+        <div className="bg-white rounded-2xl border shadow-sm p-6">
+          <label className="block mb-3 text-sm font-medium">
+            Assembly Type
+          </label>
 
-          <input
-            type="text"
-            placeholder="Finish"
-            value={finish}
-            onChange={(e) => setFinish(e.target.value)}
-            className="border rounded-lg p-3 w-full"
-          />
+          <select
+            value={assemblyType}
+            onChange={(e) =>
+              setAssemblyType(e.target.value)
+            }
+            className="w-full border rounded-lg px-4 py-3"
+          >
+            <option value="FIXED">Fixed</option>
+            <option value="KD">KD</option>
+          </select>
         </div>
 
         <div className="flex justify-end">
           <button
             onClick={handleSave}
-            className="bg-black text-white px-6 py-3 rounded-lg"
+            className="
+              bg-indigo-600
+              hover:bg-indigo-700
+              text-white
+              px-8
+              py-3
+              rounded-xl
+              font-medium
+              transition
+            "
           >
             Save Product
           </button>

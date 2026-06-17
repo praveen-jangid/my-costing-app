@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/immutability */
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getProducts } from "../services/product_service";
@@ -104,7 +106,7 @@ export default function ProductsPage() {
               </th>
 
               <th className="text-left p-4">
-                Product
+                Product Name
               </th>
 
               <th className="text-left p-4">
@@ -117,6 +119,10 @@ export default function ProductsPage() {
 
               <th className="text-left p-4">
                 Size
+              </th>
+
+              <th className="text-left p-4">
+                Date Created
               </th>
 
             </tr>
