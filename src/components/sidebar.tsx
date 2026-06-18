@@ -19,6 +19,16 @@ const menuItems = [
     path: "/products",
   },
   {
+    label: "RAC Products",
+    icon: Package,
+    path: "/rac-products",
+  },
+  {
+    label: "Manufacturing",
+    icon: Package,
+    path: "/manufacturing",
+  },
+  {
     label: "Hardware",
     icon: Wrench,
     path: "/hardware",
