@@ -34,13 +34,9 @@ export default function CreateProductPage() {
         const materials = await getMaterials();
         const finishes = await getFinishes();
 
-        setAvailableMaterials(
-          materials.map((item: any) => item.name)
-        );
+        setAvailableMaterials(materials.map((item: any) => item.name));
 
-        setAvailableFinishes(
-          finishes.map((item: any) => item.name)
-        );
+        setAvailableFinishes(finishes.map((item: any) => item.name));
       } catch (error) {
         console.error(error);
       }
@@ -97,9 +93,7 @@ export default function CreateProductPage() {
 
   return (
     <div className="max-w-7xl mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-8">
-        Create Product
-      </h1>
+      <h1 className="text-3xl font-bold mb-8">Create Product</h1>
 
       <div className="space-y-6">
         {/* Product Info */}
@@ -114,9 +108,7 @@ export default function CreateProductPage() {
 
                 <input
                   value={productCode}
-                  onChange={(e) =>
-                    setProductCode(e.target.value)
-                  }
+                  onChange={(e) => setProductCode(e.target.value)}
                   className="w-full border rounded-lg px-4 py-3"
                 />
               </div>
@@ -128,9 +120,7 @@ export default function CreateProductPage() {
 
                 <input
                   value={productName}
-                  onChange={(e) =>
-                    setProductName(e.target.value)
-                  }
+                  onChange={(e) => setProductName(e.target.value)}
                   className="w-full border rounded-lg px-4 py-3"
                 />
               </div>
@@ -166,17 +156,11 @@ export default function CreateProductPage() {
                   />
                 ) : (
                   <>
-                    <div className="text-5xl mb-2">
-                      📷
-                    </div>
+                    <div className="text-5xl mb-2">📷</div>
 
-                    <p className="font-medium">
-                      Click to Upload
-                    </p>
+                    <p className="font-medium">Click to Upload</p>
 
-                    <p className="text-sm text-gray-500">
-                      JPG, PNG
-                    </p>
+                    <p className="text-sm text-gray-500">JPG, PNG</p>
                   </>
                 )}
               </label>
@@ -187,15 +171,12 @@ export default function CreateProductPage() {
                 accept="image/*"
                 className="hidden"
                 onChange={(e) => {
-                  const file =
-                    e.target.files?.[0] || null;
+                  const file = e.target.files?.[0] || null;
 
                   if (!file) return;
 
                   setImageFile(file);
-                  setPreviewUrl(
-                    URL.createObjectURL(file)
-                  );
+                  setPreviewUrl(URL.createObjectURL(file));
                 }}
               />
             </div>
@@ -204,9 +185,7 @@ export default function CreateProductPage() {
 
         {/* Materials */}
         <div className="bg-white rounded-2xl border shadow-sm p-6">
-          <label className="block mb-3 text-sm font-medium">
-            Materials
-          </label>
+          <label className="block mb-3 text-sm font-medium">Materials</label>
 
           <Select
             isMulti
@@ -219,18 +198,14 @@ export default function CreateProductPage() {
               label: m,
             }))}
             onChange={(values) =>
-              setSelectedMaterials(
-                values.map((v) => v.value)
-              )
+              setSelectedMaterials(values.map((v) => v.value))
             }
           />
         </div>
 
         {/* Finishes */}
         <div className="bg-white rounded-2xl border shadow-sm p-6">
-          <label className="block mb-3 text-sm font-medium">
-            Finishes
-          </label>
+          <label className="block mb-3 text-sm font-medium">Finishes</label>
 
           <Select
             isMulti
@@ -243,27 +218,21 @@ export default function CreateProductPage() {
               label: f,
             }))}
             onChange={(values) =>
-              setSelectedFinishes(
-                values.map((v) => v.value)
-              )
+              setSelectedFinishes(values.map((v) => v.value))
             }
           />
         </div>
 
         {/* Dimensions */}
         <div className="bg-white rounded-2xl border shadow-sm p-6">
-          <h2 className="text-lg font-semibold mb-4">
-            Dimensions
-          </h2>
+          <h2 className="text-lg font-semibold mb-4">Dimensions</h2>
 
           <div className="grid md:grid-cols-4 gap-4">
             <input
               type="number"
               placeholder="Length"
               value={length}
-              onChange={(e) =>
-                setLength(e.target.value)
-              }
+              onChange={(e) => setLength(e.target.value)}
               className="border rounded-lg px-4 py-3"
             />
 
@@ -271,9 +240,7 @@ export default function CreateProductPage() {
               type="number"
               placeholder="Width"
               value={width}
-              onChange={(e) =>
-                setWidth(e.target.value)
-              }
+              onChange={(e) => setWidth(e.target.value)}
               className="border rounded-lg px-4 py-3"
             />
 
@@ -281,17 +248,13 @@ export default function CreateProductPage() {
               type="number"
               placeholder="Height"
               value={height}
-              onChange={(e) =>
-                setHeight(e.target.value)
-              }
+              onChange={(e) => setHeight(e.target.value)}
               className="border rounded-lg px-4 py-3"
             />
 
             <select
               value={unit}
-              onChange={(e) =>
-                setUnit(e.target.value)
-              }
+              onChange={(e) => setUnit(e.target.value)}
               className="border rounded-lg px-4 py-3"
             >
               <option value="INCH">INCH</option>
@@ -309,9 +272,7 @@ export default function CreateProductPage() {
 
           <select
             value={assemblyType}
-            onChange={(e) =>
-              setAssemblyType(e.target.value)
-            }
+            onChange={(e) => setAssemblyType(e.target.value)}
             className="w-full border rounded-lg px-4 py-3"
           >
             <option value="FIXED">Fixed</option>

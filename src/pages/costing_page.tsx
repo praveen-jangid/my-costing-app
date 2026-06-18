@@ -252,8 +252,8 @@ export default function CostingPage() {
 
       <div className="grid grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-2xl p-5 border">
-          <p className="text-slate-500 text-sm">Production Cost</p>
-          <h3 className="text-3xl font-bold mt-2">₹15,323</h3>
+          <p className="text-slate-500 text-sm">Manufacturing Cost</p>
+          <h3 className="text-3xl font-bold mt-2">₹10,000</h3>
         </div>
 
         <div className="bg-white rounded-2xl p-5 border">
